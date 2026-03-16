@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BILLY</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Spider Web Background */
+        .spider-web {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .web-corner {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            opacity: 0.15;
+        }
+
+        .web-tl { top: 0; left: 0; }
+        .web-tr { top: 0; right: 0; transform: scaleX(-1); }
+        .web-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+        .web-br { bottom: 0; right: 0; transform: scale(-1); }
+
+        /* Animated Background Lines */
+        .bg-lines {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(90deg, transparent 0%, rgba(138, 43, 226, 0.03) 50%, transparent 100%),
+                linear-gradient(0deg, transparent 0%, rgba(75, 0, 130, 0.03) 50%, transparent 100%);
+            background-size: 100px 100px;
+            animation: pulse 3s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px;
+        }
+
+        /* Image Container with Glow */
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 40px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .image-container img {
+            max-width: 800px;
+            width: 90vw;
+            height: auto;
+            border-radius: 20px;
+            border: 3px solid #8B5CF6;
+            box-shadow:
+                0 0 40px rgba(138, 43, 226, 0.6),
+                0 0 80px rgba(138, 43, 226, 0.4),
+                0 0 120px rgba(75, 0, 130, 0.3),
+                inset 0 0 60px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.02);
+            box-shadow:
+                0 0 60px rgba(138, 43, 226, 0.8),
+                0 0 120px rgba(138, 43, 226, 0.6),
+                0 0 180px rgba(75, 0, 130, 0.4);
+        }
+
+        /* Title */
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow:
+                0 0 20px #8B5CF6,
+                0 0 40px #8B5CF6,
+                0 0 60px #8B5CF6;
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px #8B5CF6, 0 0 40px #8B5CF6; }
+            50% { text-shadow: 0 0 40px #8B5CF6, 0 0 80px #8B5CF6, 0 0 120px #8B5CF6; }
+        }
+
+        /* Subtitle */
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+        }
+
+        /* YouTube Button */
+        .youtube-btn {
+            display: inline-block;
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            border: 2px solid #8B5CF6;
+            border-radius: 50px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow:
+                0 0 30px rgba(139, 92, 246, 0.6),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .youtube-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .youtube-btn:hover::before {
+            left: 100%;
+        }
+
+        .youtube-btn:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 0 50px rgba(139, 92, 246, 0.9),
+                0 15px 60px rgba(0, 0, 0, 0.7);
+            border-color: #fff;
+        }
+
+        /* Audio Control */
+        .audio-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid #8B5CF6;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .audio-control:hover {
+            background: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+        }
+
+        .audio-control.playing {
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .audio-icon {
+            color: #8B5CF6;
+            font-size: 24px;
+        }
+
+        /* Click to Enter Overlay */
+        .enter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+
+        .enter-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .enter-text {
+            font-size: 3rem;
+            color: #8B5CF6;
+            text-shadow: 0 0 40px #8B5CF6;
+            animation: pulse-text 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: #8B5CF6;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: particle-float 3s ease-in-out infinite;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Click to Enter Overlay -->
+    <div class="enter-overlay" id="enterOverlay">
+        <div class="enter-text">CLICK TO ENTER</div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="bg-lines"></div>
+
+    <!-- Spider Web Corners -->
+    <div class="spider-web">
+        <svg class="web-corner web-tl" viewBox="0 0 200 200">
+            <path d="M0,0 L200,200 M0,50 L150,200 M0,100 L100,200 M0,150 L50,200 M50,0 L200,150 M100,0 L200,100 M150,0 L200,50"
+                  stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="0" cy="0" r="3" fill="white"/>
+        </svg>
+        <svg class="web-corner web-tr" viewBox="0 0 200 200">
+            <path d="M0,0 L200,200 M0,50 L150,200 M0,100 L100,200 M0,150 L50,200 M50,0 L200,150 M100,0 L200,100 M150,0 L200,50"
+                  stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="0" cy="0" r="3" fill="white"/>
+        </svg>
+        <svg class="web-corner web-bl" viewBox="0 0 200 200">
+            <path d="M0,0 L200,200 M0,50 L150,200 M0,100 L100,200 M0,150 L50,200 M50,0 L200,150 M100,0 L200,100 M150,0 L200,50"
+                  stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="0" cy="0" r="3" fill="white"/>
+        </svg>
+        <svg class="web-corner web-br" viewBox="0 0 200 200">
+            <path d="M0,0 L200,200 M0,50 L150,200 M0,100 L100,200 M0,150 L50,200 M50,0 L200,150 M100,0 L200,100 M150,0 L200,50"
+                  stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
+            <circle cx="0" cy="0" r="3" fill="white"/>
+        </svg>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="title">BILLY</h1>
+        <p class="subtitle">WELCOME</p>
+
+        <div class="image-container">
+            <img src="billy.png" alt="Billy">
+        </div>
+
+        <a href="#" class="youtube-btn" id="discordBtn">
+            💬 ADD ON DISCORD
+        </a>
+        <p style="color: #8B5CF6; font-size: 1.2rem; margin-top: 15px; letter-spacing: 2px;">.bbvs</p>
+    </div>
+
+    <!-- Audio Control -->
+    <div class="audio-control" id="audioControl">
+        <div class="audio-icon">🔊</div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="track.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const enterOverlay = document.getElementById('enterOverlay');
+        const bgMusic = document.getElementById('bgMusic');
+        const audioControl = document.getElementById('audioControl');
+        const discordBtn = document.getElementById('discordBtn');
+
+        // Copy Discord username on click
+        discordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText('.bbvs').then(() => {
+                const originalText = discordBtn.textContent;
+                discordBtn.textContent = '✓ COPIED!';
+                setTimeout(() => {
+                    discordBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+
+        // Click to enter
+        enterOverlay.addEventListener('click', () => {
+            enterOverlay.classList.add('hidden');
+            bgMusic.play().catch(e => console.log('Autoplay blocked:', e));
+            audioControl.classList.add('playing');
+            createParticles();
+        });
+
+        // Audio toggle
+        audioControl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (bgMusic.paused) {
+                bgMusic.play();
+                audioControl.classList.add('playing');
+                audioControl.querySelector('.audio-icon').textContent = '🔊';
+            } else {
+                bgMusic.pause();
+                audioControl.classList.remove('playing');
+                audioControl.querySelector('.audio-icon').textContent = '🔇';
+            }
+        });
+
+        // Create floating particles
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.animationDelay = Math.random() * 3 + 's';
+                    particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+                    document.body.appendChild(particle);
+
+                    setTimeout(() => particle.remove(), 6000);
+                }, i * 200);
+            }
+        }
+
+        // Continuous particle generation
+        setInterval(createParticles, 6000);
+    </script>
+</body>
+</html>
